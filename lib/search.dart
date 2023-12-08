@@ -9,8 +9,9 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  // controller to store product pid
   final TextEditingController _controllerID = TextEditingController();
-  String _text = '';
+  String _text = ''; // displays product info or error message
 
   @override
   void dispose() {
@@ -18,16 +19,18 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
+  // update product info or display error message
   void update(String text) {
     setState(() {
       _text = text;
     });
   }
 
+  // called when user clicks on the find button
   void getProduct() {
     try {
       int pid = int.parse(_controllerID.text);
-      searchProduct(update, pid);
+      searchProduct(update, pid); // search asynchronously for product record
     }
     catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('wrong arguments')));

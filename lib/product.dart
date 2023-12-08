@@ -1,9 +1,11 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-
+// main URL for REST pages
 const String _baseURL = 'csci410fall2023.000webhostapp.com';
 
+// class to represent a row from the products table
+// note: cid is replaced by category name
 class Product {
   int _pid;
   String _name;
@@ -18,34 +20,35 @@ class Product {
     return 'PID: $_pid Name: $_name Quantity: $_quantity Price: \$$_price Category: $_category';
   }
 }
-
+// list to hold products retrieved from getProducts
 List<Product> _products = [];
-
+// asynchronously update _products list
 void updateProducts(Function(bool success) update) async {
   try {
     final url = Uri.https(_baseURL, 'getProducts.php');
     final response = await http.get(url)
-        .timeout(const Duration(seconds: 5));
-    _products.clear();
-    if (response.statusCode == 200) {
-      final jsonResponse = convert.jsonDecode(response.body);
-      for (var row in jsonResponse) {
-        Product p = Product(
+        .timeout(const Duration(seconds: 5)); // max timeout 5 seconds
+    _products.clear(); // clear old products
+    if (response.statusCode == 200) { // if successful call
+      final jsonResponse = convert.jsonDecode(response.body); // create dart json object from json array
+      for (var row in jsonResponse) { // iterate over all rows in the json array
+        Product p = Product( // create a product object from JSON row object
             int.parse(row['pid']),
             row['name'],
             int.parse(row['quantity']),
             double.parse(row['price']),
             row['category']);
-        _products.add(p);
+        _products.add(p); // add the product object to the _products list
       }
-      update(true);
+      update(true); // callback update method to inform that we completed retrieving data
     }
   }
   catch(e) {
-    update(false);
+    update(false); // inform through callback that we failed to get data
   }
 }
 
+// searches for a single product using product pid
 void searchProduct(Function(String text) update, int pid) async {
   try {
     final url = Uri.https(_baseURL, 'searchProduct.php', {'pid':'$pid'});
@@ -70,7 +73,7 @@ void searchProduct(Function(String text) update, int pid) async {
   }
 }
 
-
+// shows products stored in the _products list as a ListView
 class ShowProducts extends StatelessWidget {
   const ShowProducts({super.key});
 

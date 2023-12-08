@@ -1,3 +1,7 @@
+/*
+This application teaches students how to make API calls
+to retrieve JSON data and manipulate it.
+ */
 import 'package:flutter/material.dart';
 import 'home.dart';
 
