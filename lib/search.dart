@@ -10,7 +10,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   final TextEditingController _controllerID = TextEditingController();
-
+  String _text = '';
 
   @override
   void dispose() {
@@ -18,10 +18,16 @@ class _SearchState extends State<Search> {
     super.dispose();
   }
 
+  void update(String text) {
+    setState(() {
+      _text = text;
+    });
+  }
+
   void getProduct() {
     try {
-      int id = int.parse(_controllerID.text);
-
+      int pid = int.parse(_controllerID.text);
+      searchProduct(update, pid);
     }
     catch(e) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('wrong arguments')));
@@ -43,8 +49,8 @@ class _SearchState extends State<Search> {
         ElevatedButton(onPressed: getProduct,
             child: const Text('Find', style: TextStyle(fontSize: 18))),
         const SizedBox(height: 10),
-        Flexible(child: Text('',
-            style: const TextStyle(fontSize: 18))),
+        Center(child: SizedBox(width: 200, child: Flexible(child: Text(_text,
+            style: const TextStyle(fontSize: 18))))),
       ],
 
       ),

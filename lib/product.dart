@@ -1,6 +1,5 @@
 import 'dart:convert' as convert;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:http/http.dart' as http;
 
 const String _baseURL = 'csci410fall2023.000webhostapp.com';
@@ -46,6 +45,31 @@ void updateProducts(Function(bool success) update) async {
     update(false);
   }
 }
+
+void searchProduct(Function(String text) update, int pid) async {
+  try {
+    final url = Uri.https(_baseURL, 'searchProduct.php', {'pid':'$pid'});
+    final response = await http.get(url)
+        .timeout(const Duration(seconds: 5));
+    _products.clear();
+    if (response.statusCode == 200) {
+      final jsonResponse = convert.jsonDecode(response.body);
+      var row = jsonResponse[0];
+        Product p = Product(
+            int.parse(row['pid']),
+            row['name'],
+            int.parse(row['quantity']),
+            double.parse(row['price']),
+            row['category']);
+        _products.add(p);
+      update(p.toString());
+    }
+  }
+  catch(e) {
+    update("can't load data");
+  }
+}
+
 
 class ShowProducts extends StatelessWidget {
   const ShowProducts({super.key});
