@@ -24,7 +24,7 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    // update data when you add for the first time the widget to the tree
+    // update data when the widget is added to the tree the first tome.
     updateProducts(update);
     super.initState();
   }
