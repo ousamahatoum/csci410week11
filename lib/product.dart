@@ -17,7 +17,7 @@ class Product {
 
   @override
   String toString() {
-    return 'PID: $_pid Name: $_name Quantity: $_quantity Price: \$$_price Category: $_category';
+    return 'PID: $_pid Name: $_name\nQuantity: $_quantity Price: \$$_price\nCategory: $_category';
   }
 }
 // list to hold products retrieved from getProducts
@@ -75,24 +75,23 @@ void searchProduct(Function(String text) update, int pid) async {
 
 // shows products stored in the _products list as a ListView
 class ShowProducts extends StatelessWidget {
-  const ShowProducts({super.key});
+  const ShowProducts({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     return ListView.builder(
         itemCount: _products.length,
-        itemBuilder: (context, index) {
-          return Column(children: [
-            const SizedBox(height: 5),
-            Row(children: [
-              SizedBox(width: width * 0.3),
-              SizedBox(width: width * 0.5, child:
-              Flexible(child: Text(_products[index].toString(),
-              style: const TextStyle(fontSize: 18)))),
-            ]),
-            const SizedBox(height: 5)
-          ]);
-        });
+        itemBuilder: (context, index) => Column(children: [
+          const SizedBox(height: 10),
+          Container(
+              color: index % 2 == 0 ? Colors.amber: Colors.cyan,
+              padding: const EdgeInsets.all(5),
+              width: width * 0.9, child: Row(children: [
+            SizedBox(width: width * 0.15),
+            Flexible(child: Text(_products[index].toString(), style: TextStyle(fontSize: width * 0.045)))
+          ]))
+        ])
+    );
   }
 }
